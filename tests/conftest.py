@@ -1,36 +1,13 @@
-import sys
-import os
-from unittest.mock import MagicMock
-
-# Получаем путь к корню проекта
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# СОЗДАЁМ ФЕЙКОВЫЙ МОДУЛЬ praktikum ДО ЛЮБЫХ ИМПОРТОВ
-class PraktikumModule:
-    pass
-
-# Создаём и регистрируем модуль praktikum
-praktikum = PraktikumModule()
-sys.modules['praktikum'] = praktikum
-
-# Создаём фейковые подмодули
-for submodule in ['bun', 'burger', 'ingredient', 'ingredient_types', 'database']:
-    fake_module = MagicMock()
-    sys.modules[f'praktikum.{submodule}'] = fake_module
-    setattr(praktikum, submodule, fake_module)
-
-
-# Добавляем путь к корню
-sys.path.insert(0, project_root)
-
 import pytest
 from unittest.mock import Mock
+from praktikum.bun import Bun
+from praktikum.ingredient import Ingredient
 
 
 @pytest.fixture
 def mock_bun():
     """Фикстура: мок булочки"""
-    bun_mock = Mock()
+    bun_mock = Mock(spec=Bun)
     bun_mock.get_name.return_value = "black bun"
     bun_mock.get_price.return_value = 100
     return bun_mock
@@ -39,7 +16,7 @@ def mock_bun():
 @pytest.fixture
 def mock_ingredient_sauce():
     """Фикстура: мок ингредиента типа соус"""
-    ingredient_mock = Mock()
+    ingredient_mock = Mock(spec=Ingredient)
     ingredient_mock.get_type.return_value = "SAUCE"
     ingredient_mock.get_name.return_value = "hot sauce"
     ingredient_mock.get_price.return_value = 50
@@ -49,7 +26,7 @@ def mock_ingredient_sauce():
 @pytest.fixture
 def mock_ingredient_filling():
     """Фикстура: мок ингредиента типа начинка"""
-    ingredient_mock = Mock()
+    ingredient_mock = Mock(spec=Ingredient)
     ingredient_mock.get_type.return_value = "FILLING"
     ingredient_mock.get_name.return_value = "cutlet"
     ingredient_mock.get_price.return_value = 75

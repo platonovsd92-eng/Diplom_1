@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from burger import Burger
+from praktikum.burger import Burger
 
 
 class TestBurger:
@@ -91,10 +91,15 @@ class TestBurger:
 
         receipt = burger.get_receipt()
 
-        assert '(==== black bun ====)' in receipt
-        assert '= sauce hot sauce =' in receipt
-        assert '= filling cutlet =' in receipt
-        assert 'Price:' in receipt
+        expected_receipt = (
+            '(==== black bun ====)\n'
+            '= sauce hot sauce =\n'
+            '= filling cutlet =\n'
+            '(==== black bun ====)\n\n'
+            'Price: 325'
+        )
+
+        assert receipt == expected_receipt
 
     @pytest.mark.parametrize("ingredient_type,expected_type_in_receipt", [
         ("SAUCE", "sauce"),
